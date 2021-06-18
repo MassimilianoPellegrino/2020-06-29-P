@@ -39,7 +39,7 @@ public class FXMLController {
     private TextField txtMinuti; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbMese"
-    private ComboBox<?> cmbMese; // Value injected by FXMLLoader
+    private ComboBox<String> cmbMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM1"
     private ComboBox<?> cmbM1; // Value injected by FXMLLoader
@@ -53,10 +53,21 @@ public class FXMLController {
     @FXML
     void doConnessioneMassima(ActionEvent event) {
     	
+    	
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	this.txtResult.clear();
+    	int min;
+    	String mese;
+    	try {
+    		min = Integer.parseInt(this.txtMinuti.getText());
+    		mese = this.cmbMese.getValue();
+    		model.creaGrafo(min, mese);
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserire un numero intero");    
+    	}
     	
     }
 
@@ -79,7 +90,16 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
-  
+    	this.cmbMese.getItems().add("Agosto");
+    	this.cmbMese.getItems().add("Settembre");
+    	this.cmbMese.getItems().add("Ottobre");
+    	this.cmbMese.getItems().add("Novembre");
+    	this.cmbMese.getItems().add("Dicembre");
+    	this.cmbMese.getItems().add("Gennaio");
+    	this.cmbMese.getItems().add("Febbraio");
+    	this.cmbMese.getItems().add("Marzo");
+    	this.cmbMese.getItems().add("Aprile");
+    	this.cmbMese.getItems().add("Maggio");
     }
     
     
