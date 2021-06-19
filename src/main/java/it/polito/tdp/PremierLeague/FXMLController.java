@@ -8,6 +8,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import it.polito.tdp.PremierLeague.model.Match;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -42,17 +46,25 @@ public class FXMLController {
     private ComboBox<String> cmbMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM1"
-    private ComboBox<?> cmbM1; // Value injected by FXMLLoader
+    private ComboBox<Match> cmbM1; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM2"
-    private ComboBox<?> cmbM2; // Value injected by FXMLLoader
+    private ComboBox<Match> cmbM2; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtResult"
     private TextArea txtResult; // Value injected by FXMLLoader
 
     @FXML
     void doConnessioneMassima(ActionEvent event) {
-    	
+    	this.txtResult.clear();
+    	List<DefaultWeightedEdge> result;
+    	try {
+    		result = model.archiPesoMassimo();
+    		for(DefaultWeightedEdge e: result)
+    			this.txtResult.appendText(e.toString()+"\n");
+    	}catch(NullPointerException e) {
+    		e.printStackTrace();
+    	}
     	
     }
 
@@ -65,14 +77,40 @@ public class FXMLController {
     		min = Integer.parseInt(this.txtMinuti.getText());
     		mese = this.cmbMese.getValue();
     		model.creaGrafo(min, mese);
+    		this.txtResult.appendText("Grafo creato con "+model.getGrafo().vertexSet().size()+" vertici e "+model.getGrafo().edgeSet().size()+" archi");
+    		
+    		this.btnConnessioneMassima.setDisable(false);
+        	this.btnCollegamento.setDisable(false);
+        	
+        	this.cmbM1.getItems().addAll(model.getGrafo().vertexSet());
+        	this.cmbM2.getItems().addAll(model.getGrafo().vertexSet());
+
     	}catch(NumberFormatException e) {
     		this.txtResult.setText("Inserire un numero intero");    
+    	}catch(NullPointerException e) {
+    		this.txtResult.setText("Selezionare un mese dal menu");
     	}
     	
     }
 
     @FXML
     void doCollegamento(ActionEvent event) {
+    	this.txtResult.clear();
+    	List<Match> result;
+    	Match m1;
+    	Match m2;
+    	try {
+    		m1 = this.cmbM1.getValue();
+    		m2 = this.cmbM2.getValue();
+    		result = model.getCammino(m1, m2);
+    		if(result.size()>0) {
+    			for(Match m: result)
+    				this.txtResult.appendText(m+"\n");
+    		}else
+    			this.txtResult.appendText("Collegamento inesistente");
+    	}catch(NullPointerException e) {
+    		this.txtResult.appendText("Selezionare due match dai menu");
+    	}
     	
     }
 
@@ -100,6 +138,8 @@ public class FXMLController {
     	this.cmbMese.getItems().add("Marzo");
     	this.cmbMese.getItems().add("Aprile");
     	this.cmbMese.getItems().add("Maggio");
+    	this.btnConnessioneMassima.setDisable(true);
+    	this.btnCollegamento.setDisable(true);
     }
     
     

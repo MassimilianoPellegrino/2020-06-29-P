@@ -6,7 +6,10 @@ public class TestModel {
 		// TODO Auto-generated method stub
 		Model model = new Model();
 		model.creaGrafo(10, "Maggio");
-		model.archiPesoMassimo();
+		//model.creaGrafo(85, "Febbraio");
+		//model.archiPesoMassimo();
+		
+		model.getCammino(model.getIdMap().get(58), model.getIdMap().get(22));
 	}
 
 }

@@ -155,7 +155,7 @@ public class PremierLeagueDAO {
 		
 		String sql = "SELECT a1.MatchID as match1, a2.MatchID as match2, COUNT(DISTINCT(a1.PlayerID)) AS peso "
 				+ "FROM actions a1, actions a2 "
-				+ "WHERE a1.PlayerID=a2.PlayerID AND a1.MatchID>a2.MatchID and a1.TimePlayed>1 AND a2.TimePlayed>? "
+				+ "WHERE a1.PlayerID=a2.PlayerID AND a1.MatchID!=a2.MatchID and a1.TimePlayed>? and a2.TimePlayed>? "
 				+ "GROUP BY a1.MatchID, a2.MatchID";
 		
 		
@@ -164,6 +164,7 @@ public class PremierLeagueDAO {
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setInt(1, min);
+			st.setInt(2, min);
 			ResultSet res = st.executeQuery();
 			while (res.next()) {
 
